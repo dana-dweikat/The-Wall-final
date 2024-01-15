@@ -1,0 +1,45 @@
+{% extends './base.html' %}
+{% block content %}
+
+    <title>Wall assignment _ intermediate version </title>
+    <link rel="stylesheet" href="../static/navbar.css">
+
+  <form action="{% url 'app1:message' %}" method="POST">
+          {% csrf_token %}
+      <div class="form-group">
+          <label for="exampleFormControlTextarea1">Post a message</label>
+          <textarea class="form-control" name="text" id="exampleFormControlTextarea1" rows="3"></textarea>
+        </div>
+        <div class="submit-btn d-flex justify-content-end">
+          <button type="submit" class="btn  btn-primary btn-shadow mt-2"> Post a message</button>
+      </div>
+    </form>
+
+    {% for message in messages %}
+
+      <h4>{{message.user_id.first_name}}  _  {{message.created_at}}</h2>
+      <p style="word-wrap: break-word;">{{message.message}} </p>
+
+      <br>
+
+      {% for comment in message.comments.all %}
+        <h5>{{comment.user_id.first_name}} _ {{comment.created_at}}</h5>  
+        <p style="word-wrap: break-word;">{{comment.comment}}</p>
+        <br>
+      {% endfor %}
+
+    <!-- @comment -->
+    <form action="{% url 'app1:comment' %}" method="POST">
+      {% csrf_token %}
+      <div class="form-group">
+          <label for="exampleFormControlTextarea1">Post a comment</label>
+          <textarea class="form-control" name="comment" id="exampleFormControlTextarea1" rows="3"></textarea>
+          <input name="message_id" type="hidden" value="{{message.id}}">
+    </div>
+        <div class="submit-btn d-flex justify-content-end">
+          <button type="submit" class="btn  btn-success btn-shadow mt-2"> Post a comment</button>  
+          </div>
+      </form>
+      <hr style="height: 20px; background-color: #000000;">
+    {% endfor %}
+    {% endblock content %}
